@@ -1049,7 +1049,7 @@
         <a href="#">Privacy</a>
       </div>
     </footer>
-    
+    <script src="https://cdn.emailjs.com/sdk/3.2/email.min.js"></script>
     <script>
     // Navbar scroll
     const navbar = document.getElementById('navbar');
@@ -1077,17 +1077,31 @@
     }, { threshold: 0.12 });
     revealEls.forEach(el => observer.observe(el));
     
+
     // Form submit
-    function submitForm(btn) {
-      btn.textContent = '✓ Request Sent!';
-      btn.style.background = '#1a6b35';
-      btn.style.boxShadow = '0 4px 20px rgba(26,107,53,0.4)';
-      setTimeout(() => {
-        btn.textContent = 'Send Booking Request →';
-        btn.style.background = '';
-        btn.style.boxShadow = '';
-      }, 3000);
-    }
+    emailjs.init("YOUR_USER_ID"); // replace with your EmailJS user ID
+
+  function submitForm(btn) {
+    const form = document.getElementById('booking-form');
+
+    emailjs.sendForm('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', form)
+      .then(() => {
+        btn.textContent = '✓ Request Sent!';
+        btn.style.background = '#1a6b35';
+        btn.style.boxShadow = '0 4px 20px rgba(26,107,53,0.4)';
+
+        setTimeout(() => {
+          btn.textContent = 'Send Booking Request →';
+          btn.style.background = '';
+          btn.style.boxShadow = '';
+        }, 3000);
+
+        form.reset(); // clear form after sending
+      }, (error) => {
+        alert('Failed to send. Please try again later.');
+        console.error(error);
+      });
+  }
     
     // Counter animation for stats
     function animateCount(el, target, suffix = '') {
